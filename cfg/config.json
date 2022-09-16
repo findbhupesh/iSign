@@ -1,0 +1,29 @@
+{
+	"DSC_PKCS_TYPE": "PKCS12",
+	"DSC_PKCS_CARD": "epass2003",
+	"DSC_PKCS_PSWD": "VGVzdEAxMjM=",
+	"DSC_ROOT_FLDR": "C:\\Windows\\Temp\\iSign",
+	"DSC_OUTP_FLDR": "C:\\Windows\\Temp\\iSign",
+	"DSC_JLOG_FILE": "cfg/log4j.properties",
+	"DSC_SIGN_PAGE": "0",
+	"DSC_OUTP_LIST": {
+		"RD00": [200,  60, 200,  56],
+		"RD01": [630,  80, 200,  60],
+		"RD02": [630,  80, 200,  60],
+		"RD23": [630,  80, 200,  60],
+		"RE01": [ 80,  80, 200,  75],
+		"RE02": [ 80,  80, 200,  75],
+		"DFLT": [630,  80, 200,  60],
+		"TEXT": [ 10,  30,  50,  70]
+	},
+	"DSC_CERT_LIST": {
+		"1100": {"DSC_CERT_PATH":"cfg\\dsc_1100.pfx","DSC_CERT_PSWD" : "VGVzdEAxMjM="},
+		"DFLT": {"DSC_CERT_PATH":"cfg\\dsc_DFLT.pfx","DSC_CERT_PSWD" : "VGVzdEAxMjM="}
+	},	
+	"DSC_PKCS_LIST": {
+		"epass2003": "name=eToken\nlibrary=C:\\Windows\\System32\\eps2003csp11.dll",
+		"Signature": "name=eToken\nlibrary=C:\\Windows\\System32\\SignatureP11.dll",
+		"iSafeSign": "name=eToken\nlibrary=C:\\Windows\\System32\\aetpkss1.dll"
+	}
+
+}
