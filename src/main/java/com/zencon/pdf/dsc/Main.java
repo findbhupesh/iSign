@@ -63,7 +63,7 @@ public class Main extends UTL {
 		setNames();
 		readToken();
 		setImage(DSC_CERT_DATA);
-		addSigns(DSC_SIGN_PICT);
+		addSigns();
 		signPDoc(DSC_OUTP_FILE, 
 				 DSC_SIGN_FILE, 
 				 DSC_CERT_CCHN, 

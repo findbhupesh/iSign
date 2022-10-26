@@ -10,7 +10,6 @@ import java.awt.image.BufferedImage;
 import java.awt.print.*;
 import com.spire.*;
 
-
 import java.io.File;
 import java.io.FileInputStream;
 import java.io.FileOutputStream;
@@ -40,24 +39,30 @@ import org.json.JSONArray;
 import org.json.JSONException;
 import org.json.JSONObject;
 
+
 import com.itextpdf.io.font.PdfEncodings;
 import com.itextpdf.io.image.ImageData;
 import com.itextpdf.io.image.ImageDataFactory;
+import com.itextpdf.kernel.colors.DeviceGray;
+import com.itextpdf.kernel.colors.DeviceRgb;
 import com.itextpdf.kernel.font.PdfFont;
 import com.itextpdf.kernel.font.PdfFontFactory;
 import com.itextpdf.kernel.geom.Rectangle;
 import com.itextpdf.kernel.pdf.EncryptionConstants;
 import com.itextpdf.kernel.pdf.PdfDocument;
 import com.itextpdf.kernel.pdf.PdfDocumentInfo;
-
 import com.itextpdf.kernel.pdf.PdfPage;
 import com.itextpdf.kernel.pdf.PdfReader;
 
 import com.itextpdf.kernel.pdf.PdfWriter;
 import com.itextpdf.kernel.pdf.WriterProperties;
+
 import com.itextpdf.kernel.pdf.canvas.PdfCanvas;
+import com.itextpdf.kernel.pdf.xobject.PdfFormXObject;
 import com.itextpdf.layout.Canvas;
 import com.itextpdf.layout.element.Image;
+import com.itextpdf.layout.element.Paragraph;
+import com.itextpdf.layout.property.TextAlignment;
 import com.itextpdf.signatures.BouncyCastleDigest;
 import com.itextpdf.signatures.DigestAlgorithms;
 import com.itextpdf.signatures.IExternalDigest;
@@ -65,6 +70,7 @@ import com.itextpdf.signatures.IExternalSignature;
 import com.itextpdf.signatures.PdfSignatureAppearance;
 import com.itextpdf.signatures.PdfSigner;
 import com.itextpdf.signatures.PrivateKeySignature;
+
 import com.itextpdf.signatures.PdfSigner.CryptoStandard;
 
 
@@ -141,7 +147,7 @@ public class UTL  {
 		DSC_CERT_CCMS = CryptoStandard.CMS;
 		DSC_JLOG_FILE = json.getString("DSC_JLOG_FILE");
 		DSC_SIGN_LOGO = "img/dsc_inp.png";
-		DSC_SIGN_PICT = "img/dsc_out.png";
+		
 		DSC_TEXT_SIGN = "Digitally signed by";
 		DSC_SIGN_FORM =  "yyyy-MM-dd HH:mm:ss z";
 		
@@ -178,10 +184,12 @@ public class UTL  {
 
 	}
  	public static void setImage(String data) throws IOException, JSONException, InterruptedException, NoSuchAlgorithmException, CertificateException, KeyStoreException, ParseException {
- 		JSONArray 			cord = new JSONArray(DSC_TEXT_CORD);
+// 		JSONArray 			cord = new JSONArray(DSC_TEXT_CORD);
+
+//		FileUtils.copyFile(new File(DSC_SIGN_LOGO), new File(DSC_SIGN_PICT));
+//		final BufferedImage bimg = ImageIO.read(new File(DSC_SIGN_LOGO));
 		JSONObject			item = new JSONObject();
- 		final BufferedImage bimg = ImageIO.read(new File(DSC_SIGN_LOGO));
-		DSC_SIGN_DATE   = "Date: " + DSC_DATE_TIME;
+ 		DSC_SIGN_DATE   = "Date: " + DSC_DATE_TIME;
 		String[] list= data.split(",");
 		 for (String pair : list) {
 			 try {
@@ -194,19 +202,19 @@ public class UTL  {
 		DSC_SIGN_NAME = item.getString("CN");
 		System.out.println(DSC_SIGN_NAME);
 		DSC_SIGN_NAME = DSC_SIGN_NAME.replace("DS","");
-		DSC_SIGN_NAME = DSC_SIGN_NAME.replace("2","");
-	    Graphics g 		= bimg.getGraphics();
-	    Font font = new Font("Arial",Font.PLAIN,9); 
-	    g.setFont(font);
-	    ((Graphics2D) g).setComposite(AlphaComposite.Clear);
-	    g.setColor(Color.BLACK);
-	    g.drawString(DSC_TEXT_SIGN,                cord.getInt(0),cord.getInt(1));
-	    g.drawString(DSC_SIGN_NAME,cord.getInt(0),cord.getInt(2));
+		DSC_SIGN_NAME = DSC_SIGN_NAME.replace("1","");
+/*	    Graphics 		gp 	= bimg.getGraphics();
+	    Font font = new Font("Arial",Font.BOLD,10); 
+	    gp.setFont(font);
+	    ((Graphics2D) gp).setComposite(AlphaComposite.Clear);
+	    gp.setColor(Color.BLACK);
+	    gp.drawString(DSC_TEXT_SIGN,               cord.getInt(0),cord.getInt(1));
+//	    gp.drawString(DSC_SIGN_NAME,cord.getInt(0),cord.getInt(2));
 //	    g.drawString(DSC_SIGN_NAME.substring(25),  cord.getInt(0),cord.getInt(3));
-	    g.drawString(DSC_SIGN_DATE,cord.getInt(0), cord.getInt(3));
-	    g.drawString("Auth By : " + DSC_AUTH_NAME, 	cord.getInt(0),cord.getInt(4));	    
-	    g.dispose();
-	    ImageIO.write(bimg, "png", new File(DSC_SIGN_PICT));
+	    gp.drawString(DSC_SIGN_DATE,cord.getInt(0), cord.getInt(3));
+	    gp.drawString("Auth By : " + DSC_AUTH_NAME, cord.getInt(0),cord.getInt(4));	    
+        gp.dispose();
+	    ImageIO.write(bimg, "png", new File(DSC_SIGN_PICT)); */
 	}
 	public static void setCoOrd() throws JSONException {
 		int 		angle = Integer.parseInt(DSC_PAGE_ROTN);
@@ -332,33 +340,51 @@ public class UTL  {
 		
 	}
 
-	public static void addSigns(String DSC_SIMG_OUTP) throws IOException, JSONException {
+	public static void addSigns() throws IOException, JSONException {
 		JSONArray page = new JSONArray(DSC_PAGE_LIST);
 		JSONArray cord = new JSONArray(DSC_OUTP_CORD);
 		int 	  angl = Integer.parseInt(DSC_PAGE_ROTN);
-
-		PdfCanvas 	pdfcanvas;
-		Canvas		canvas;
+		Canvas	   canvas;
 	    
-		String 	    	simage = DSC_SIMG_OUTP;
+		String 	    	simage = DSC_SIGN_LOGO;
 		PdfReader   	reader = new PdfReader(DSC_TEMP_FILE);
 		PdfWriter   	writer = new PdfWriter(DSC_OUTP_FILE);
 		PdfDocument 	pdfDoc = new PdfDocument(reader,writer);
-
         ImageData data = ImageDataFactory.create(simage);
         Image     simg = new Image(data);
         for (int i=0;i<page.length();i++) {
         	PdfPage xpage = pdfDoc.getPage(page.getInt(i));     
-        	pdfcanvas = new PdfCanvas(xpage);
+        	PdfCanvas pdfcanvas = new PdfCanvas(xpage);
         	Rectangle rect = new Rectangle(cord.getInt(0),cord.getInt(1),cord.getInt(2),cord.getInt(3));
         	simg.setRotationAngle(Math.toRadians(angl)); 
         	simg.scaleToFit(cord.getInt(2), cord.getInt(3));
+        	String dtext =  "\n"					       +"\n"+
+        			        "Digitally Signed By" 		   +"\n"+
+                            DSC_SIGN_NAME.substring(0,20)  +"\n"+
+		                    DSC_SIGN_NAME.substring(20)    +"\n"+
+                            DSC_SIGN_DATE                  +"\n"+
+		                    "Auth By : " + DSC_AUTH_NAME;
+
+            
+        	Image dimg = getImage(pdfDoc,simg,dtext);
         	canvas = new Canvas(pdfcanvas,pdfDoc,rect);
-           	canvas.add(simg);
+        	canvas.add(dimg);         	
         }
 	    pdfDoc.close();
 }
-
+	
+	@SuppressWarnings("resource")
+	public static Image getImage(PdfDocument pdfDoc, Image img, String dtext) {
+        float width = img.getImageScaledWidth();
+        float height = img.getImageScaledHeight();
+        PdfFormXObject template = new PdfFormXObject(new Rectangle(width, height));
+        new Canvas(template, pdfDoc).
+                add(img).
+                setFontColor(DeviceGray.BLACK).
+                setFontSize(6).
+                showTextAligned(dtext, width / 15, height / 4, TextAlignment.LEFT,0); // (float) Math.PI / 6);
+        return new Image(template);
+    }
 	 public static void signPDoc(String src, 
 		 					 String dest,
 		 					 Certificate[] chain,
@@ -376,7 +402,7 @@ public class UTL  {
 	        PdfFont font = PdfFontFactory.createRegisteredFont("TimesRoman", PdfEncodings.WINANSI);
 	        Rectangle rect = new Rectangle(	sgcord.getInt(0),sgcord.getInt(1),10,10);
 	        JSONArray	page = new JSONArray(DSC_PAGE_LIST);
-	        ImageData data = ImageDataFactory.create(DSC_SIGN_PICT);
+	        ImageData data = ImageDataFactory.create(DSC_SIGN_LOGO);
 	        sap.setReason(reason);
 	        sap.setLayer2Font(font);
 	        sap.setImage(data);
